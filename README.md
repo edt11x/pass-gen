@@ -3,6 +3,7 @@
 A simple, modern password generation application for Linux, built with Rust and the Slint UI framework.
 
 ## Features
+- **Multiple Formats**: Choose between Standard (customizable), Base36, Hex, and Numeric passwords.
 - Generate secure passwords with configurable length (8-64 characters).
 - Toggle uppercase letters, numbers, and symbols.
 - **Password Strength Indicator** (Weak, Medium, Strong).

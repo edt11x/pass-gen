@@ -1,4 +1,4 @@
-import { Button, VerticalBox, LineEdit, CheckBox, Slider, HorizontalBox } from "std-widgets.slint";
+import { Button, VerticalBox, LineEdit, CheckBox, Slider, HorizontalBox, ComboBox } from "std-widgets.slint";
 
 export component AppWindow inherits Window {
     in-out property <string> password: "";
@@ -6,8 +6,9 @@ export component AppWindow inherits Window {
     in-out property <bool> use-numbers: true;
     in-out property <bool> use-symbols: true;
     in-out property <int> length: 16;
-    in-out property <string> strength: "Weak";
-    in-out property <color> strength-color: red;
+    in-out property <string> strength: "None";
+    in-out property <color> strength-color: gray;
+    in-out property <string> selected-format: "Standard";
 
     callback generate-password();
     callback copy-to-clipboard();
@@ -15,7 +16,7 @@ export component AppWindow inherits Window {
 
     title: "Password Generator";
     min-width: 400px;
-    min-height: 450px;
+    min-height: 500px;
 
     VerticalBox {
         alignment: start;
@@ -65,6 +66,18 @@ export component AppWindow inherits Window {
         VerticalBox {
             spacing: 5px;
             Text {
+                text: "Format:";
+            }
+            ComboBox {
+                model: ["Standard", "Base36", "Hex", "Numeric"];
+                current-value: root.selected-format;
+                selected(val) => { root.selected-format = val; }
+            }
+        }
+
+        VerticalBox {
+            spacing: 5px;
+            Text {
                 text: "Password Length: \{root.length}";
             }
             Slider {
@@ -77,6 +90,7 @@ export component AppWindow inherits Window {
 
         VerticalBox {
             spacing: 5px;
+            visible: root.selected-format == "Standard";
             CheckBox {
                 text: "Include Uppercase Letters";
                 checked: root.use-uppercase;

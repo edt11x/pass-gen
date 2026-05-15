@@ -39,20 +39,26 @@ fn main() -> Result<(), slint::PlatformError> {
         move || {
             let ui = ui_handle.unwrap();
             let length = ui.get_length() as usize;
-            let use_uppercase = ui.get_use_uppercase();
-            let use_numbers = ui.get_use_numbers();
-            let use_symbols = ui.get_use_symbols();
-
-            let mut charset = "abcdefghijklmnopqrstuvwxyz".to_string();
-            if use_uppercase {
-                charset.push_str("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
-            }
-            if use_numbers {
-                charset.push_str("0123456789");
-            }
-            if use_symbols {
-                charset.push_str("!@#$%^&*()_+-=[]{}|;:,.<>?");
-            }
+            let format = ui.get_selected_format();
+            
+            let charset = match format.as_str() {
+                "Base36" => "abcdefghijklmnopqrstuvwxyz0123456789".to_string(),
+                "Hex" => "0123456789abcdef".to_string(),
+                "Numeric" => "0123456789".to_string(),
+                _ => {
+                    let mut s = "abcdefghijklmnopqrstuvwxyz".to_string();
+                    if ui.get_use_uppercase() {
+                        s.push_str("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+                    }
+                    if ui.get_use_numbers() {
+                        s.push_str("0123456789");
+                    }
+                    if ui.get_use_symbols() {
+                        s.push_str("!@#$%^&*()_+-=[]{}|;:,.<>?");
+                    }
+                    s
+                }
+            };
 
             let mut rng = rand::thread_rng();
             let password: String = (0..length)
