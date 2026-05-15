@@ -1,30 +1,44 @@
 # Password Generator (Rust + Slint)
 
-A simple, modern password generation application for Linux, built with Rust and the Slint UI framework.
+A simple, modern, and highly configurable password generation application for Linux, built with Rust and the Slint UI framework.
 
 ## Features
-- **Multiple Formats**: Choose between Standard (customizable), Base36, Hex, and Numeric passwords.
-- Generate secure passwords with configurable length (8-64 characters).
-- Toggle uppercase letters, numbers, and symbols.
-- **Password Strength Indicator** (Weak, Medium, Strong).
-- **Copy to Clipboard** and **Clear** functionality.
-- Clean and responsive Slint-based GUI.
+- **Extensive Password Formats**:
+  - **Standard**: Fully customizable with uppercase, numbers, and symbols.
+  - **Non-ambiguous**: Excludes easily confused characters (e.g., `0`, `O`, `1`, `I`).
+  - **Alpha/Alphanumeric**: Pure letter or letter+digit sets.
+  - **Base 36 / Base 58 / Base 62**: For various encoding needs.
+  - **Hex/Binary/Numeric**: For technical or PIN generation.
+  - **ASCII (Printable)**: Uses all non-whitespace printable characters.
+  - **Easy to Remember**: Generates "leet-speak" word phrases (e.g., `4lph4-br4v0`).
+  - **Work Password**: A specific 14-character repeated format (e.g., `abc<123abc<123`).
+  - **Random Integer**: Generates a random number in a user-defined range.
+- **Password History**: Keep track of generated passwords during your session. Entries can be copied or deleted individually. (History is memory-only and never saved to disk).
+- **Multiple Color Schemes**: Choose between **Obsidian** (default), **Dark**, **Light**, or **System** themes.
+- **Strength Indicator**: Real-time feedback on password complexity.
+- **Clipboard Integration**: Easy copying of passwords to your clipboard.
+- **Dense UI**: Compact layout optimized for speed and visibility.
 
-## Prerequisites
+## Installation
+
+### Prerequisites
 - Rust (latest stable)
 - Slint dependencies (see [Slint documentation](https://slint.dev/))
 
-## Usage
-You can run the application directly using Cargo:
+### Install to System
+You can install the application to your local user directory (`~/.local/bin`) and add it to your applications menu by running:
 ```bash
-cargo run
+./install.sh
 ```
-Or use the provided run script:
+
+### Run without Installation
 ```bash
 ./run.sh
+# OR
+cargo run --release
 ```
 
 ## Development
-- `ui/appwindow.slint`: UI definition.
-- `src/main.rs`: Application logic and event handling.
-- `build.rs`: Compiles Slint UI files.
+- `ui/appwindow.slint`: UI definition and theme system.
+- `src/main.rs`: Application logic, password generation algorithms, and state management.
+- `install.sh`: Linux deployment script.

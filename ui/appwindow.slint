@@ -1,4 +1,18 @@
-import { Button, VerticalBox, LineEdit, CheckBox, Slider, HorizontalBox, ComboBox } from "std-widgets.slint";
+import { Button, VerticalBox, LineEdit, CheckBox, Slider, HorizontalBox, ComboBox, ListView } from "std-widgets.slint";
+
+export struct HistoryEntry {
+    password: string,
+}
+
+export struct ThemeColors {
+    background: color,
+    text: color,
+    secondary-text: color,
+    border: color,
+    item-bg-odd: color,
+    item-bg-even: color,
+    accent: color,
+}
 
 export component AppWindow inherits Window {
     in-out property <string> password: "";
@@ -8,110 +22,282 @@ export component AppWindow inherits Window {
     in-out property <int> length: 16;
     in-out property <string> strength: "None";
     in-out property <color> strength-color: gray;
-    in-out property <string> selected-format: "Standard";
+    in-out property <string> selected-format: "Non-ambiguous (12)";
+    in-out property <int> min-range: 0;
+    in-out property <int> max-range: 100;
+    
+    in-out property <[HistoryEntry]> history: [];
+    
+    // Theme properties
+    in-out property <string> selected-theme: "Obsidian";
+    in-out property <ThemeColors> colors;
 
     callback generate-password();
-    callback copy-to-clipboard();
     callback clear-password();
+    callback remove-from-history(int);
+    callback copy-text-to-clipboard(string);
+
+    // Update colors based on theme
+    function update_theme() {
+        if (selected-theme == "Light") {
+            colors = {
+                background: #ffffff,
+                text: #000000,
+                secondary-text: #444444,
+                border: #cccccc,
+                item-bg-odd: #f9f9f9,
+                item-bg-even: #ffffff,
+                accent: #007acc,
+            };
+        } else if (selected-theme == "Dark") {
+            colors = {
+                background: #1e1e1e,
+                text: #ffffff,
+                secondary-text: #aaaaaa,
+                border: #333333,
+                item-bg-odd: #2d2d2d,
+                item-bg-even: #1e1e1e,
+                accent: #0e639c,
+            };
+        } else if (selected-theme == "Obsidian") {
+            colors = {
+                background: #0f1115,
+                text: #e0e0e0,
+                secondary-text: #888888,
+                border: #1a1d23,
+                item-bg-odd: #161a20,
+                item-bg-even: #0f1115,
+                accent: #4a9eff,
+            };
+        }
+    }
+
+    init => {
+        update_theme();
+    }
+
+    changed selected-theme => {
+        update_theme();
+    }
 
     title: "Password Generator";
     min-width: 400px;
     min-height: 500px;
+    background: colors.background;
 
     VerticalBox {
-        alignment: start;
-        spacing: 15px;
-        padding: 20px;
+        spacing: 8px;
+        padding: 10px;
 
-        Text {
-            text: "Generated Password:";
-            font-size: 14px;
+        // Generator Section
+        VerticalBox {
+            spacing: 6px;
+            alignment: start;
+
+            HorizontalBox {
+                padding: 0;
+                spacing: 5px;
+                LineEdit {
+                    text: root.password;
+                    placeholder-text: "Generated Password";
+                    read-only: true;
+                    font-size: 16px;
+                    horizontal-alignment: center;
+                }
+                Button {
+                    text: "Copy";
+                    width: 65px;
+                    clicked => { root.copy-text-to-clipboard(root.password); }
+                }
+                Button {
+                    text: "Clear";
+                    width: 65px;
+                    clicked => { root.clear-password(); }
+                }
+            }
+
+            HorizontalBox {
+                alignment: center;
+                spacing: 4px;
+                Text { text: "Strength:"; font-size: 12px; color: colors.secondary-text; }
+                Text {
+                    text: root.strength;
+                    color: root.strength-color;
+                    font-weight: 700;
+                    font-size: 12px;
+                }
+            }
+
+            HorizontalBox {
+                spacing: 15px;
+                alignment: start;
+                
+                // Format Selector
+                HorizontalBox {
+                    spacing: 10px;
+                    Text {
+                        text: "Format:";
+                        vertical-alignment: center;
+                        font-size: 13px;
+                        color: colors.text;
+                    }
+                    ComboBox {
+                        model: [
+                            "Non-ambiguous (12)", "Non-ambiguous", "Alpha", "Alphanumeric", "Numeric",
+                            "Binary", "Hex", "Base 36", "Base 58", "Base 62", "ASCII (Printable)",
+                            "Easy to Remember", "Work Password", "Random Integer", "Standard"
+                        ];
+                        current-value: root.selected-format;
+                        selected(val) => { root.selected-format = val; }
+                    }
+                }
+
+                // Theme Selector
+                HorizontalBox {
+                    spacing: 10px;
+                    Text {
+                        text: "Theme:";
+                        vertical-alignment: center;
+                        font-size: 13px;
+                        color: colors.text;
+                    }
+                    ComboBox {
+                        model: ["Obsidian", "Light", "Dark", "System"];
+                        current-value: root.selected-theme;
+                        selected(val) => { root.selected-theme = val; }
+                    }
+                }
+            }
+
+            // Conditional Sections using 'if' to avoid whitespace
+            if (root.selected-format != "Non-ambiguous (12)" && 
+                root.selected-format != "Work Password" && 
+                root.selected-format != "Random Integer") : VerticalBox {
+                spacing: 2px;
+                padding: 0;
+                Text {
+                    text: "Length: \{root.length}";
+                    font-size: 12px;
+                    color: colors.secondary-text;
+                }
+                Slider {
+                    minimum: 1;
+                    maximum: 128;
+                    value: root.length;
+                    changed(val) => { root.length = Math.round(val); }
+                }
+            }
+
+            if (root.selected-format == "Random Integer") : VerticalBox {
+                spacing: 2px;
+                padding: 0;
+                HorizontalBox {
+                    spacing: 10px;
+                    HorizontalBox {
+                        spacing: 4px;
+                        Text { text: "Min:"; vertical-alignment: center; font-size: 12px; color: colors.secondary-text; }
+                        LineEdit {
+                            text: root.min-range;
+                            width: 60px;
+                            edited(val) => { root.min-range = val.to-float(); }
+                        }
+                    }
+                    HorizontalBox {
+                        spacing: 4px;
+                        Text { text: "Max:"; vertical-alignment: center; font-size: 12px; color: colors.secondary-text; }
+                        LineEdit {
+                            text: root.max-range;
+                            width: 60px;
+                            edited(val) => { root.max-range = val.to-float(); }
+                        }
+                    }
+                }
+            }
+
+            if (root.selected-format == "Standard") : HorizontalBox {
+                spacing: 10px;
+                padding: 0;
+                CheckBox {
+                    text: "Upper";
+                    checked: root.use-uppercase;
+                    toggled => { root.use-uppercase = !root.use-uppercase; }
+                }
+                CheckBox {
+                    text: "Numbers";
+                    checked: root.use-numbers;
+                    toggled => { root.use-numbers = !root.use-numbers; }
+                }
+                CheckBox {
+                    text: "Symbols";
+                    checked: root.use-symbols;
+                    toggled => { root.use-symbols = !root.use-symbols; }
+                }
+            }
+
+            Button {
+                text: "Generate Password";
+                primary: true;
+                height: 40px;
+                clicked => { root.generate-password(); }
+            }
         }
 
-        HorizontalBox {
+        Rectangle {
+            height: 1px;
+            background: colors.border;
+        }
+
+        // History Section
+        VerticalBox {
+            vertical-stretch: 1;
+            spacing: 4px;
             padding: 0;
-            spacing: 5px;
-            LineEdit {
-                text: root.password;
-                read-only: true;
-                font-size: 18px;
-                horizontal-alignment: center;
-            }
-            Button {
-                text: "Copy";
-                width: 60px;
-                clicked => { root.copy-to-clipboard(); }
-            }
-            Button {
-                text: "Clear";
-                width: 60px;
-                clicked => { root.clear-password(); }
-            }
-        }
-
-        HorizontalBox {
-            alignment: center;
             Text {
-                text: "Strength: ";
-                font-size: 14px;
-            }
-            Text {
-                text: root.strength;
-                color: root.strength-color;
+                text: "History:";
+                font-size: 13px;
                 font-weight: 700;
-                font-size: 14px;
+                color: colors.text;
             }
-        }
 
-        VerticalBox {
-            spacing: 5px;
-            Text {
-                text: "Format:";
+            ListView {
+                for entry[i] in root.history: Rectangle {
+                    height: 45px;
+                    border-width: 1px;
+                    border-color: colors.border;
+                    background: Math.mod(i, 2) == 0 ? colors.item-bg-odd : colors.item-bg-even;
+                    
+                    HorizontalBox {
+                        padding-left: 10px;
+                        padding-right: 10px;
+                        padding-top: 2px;
+                        padding-bottom: 2px;
+                        alignment: space-between;
+                        
+                        Text {
+                            text: entry.password;
+                            vertical-alignment: center;
+                            font-family: "monospace";
+                            font-size: 13px;
+                            color: colors.text;
+                            overflow: elide;
+                        }
+                        
+                        HorizontalBox {
+                            spacing: 5px;
+                            Button {
+                                text: "Copy";
+                                width: 65px;
+                                clicked => { root.copy-text-to-clipboard(entry.password); }
+                            }
+                            Button {
+                                text: "Delete";
+                                width: 75px;
+                                clicked => { root.remove-from-history(i); }
+                            }
+                        }
+                    }
+                }
             }
-            ComboBox {
-                model: ["Standard", "Alpha", "Alphanumeric", "Base36", "Base58", "Base62", "Hex (Lower)", "Hex (Upper)", "Numeric"];
-                current-value: root.selected-format;
-                selected(val) => { root.selected-format = val; }
-            }
-        }
-
-        VerticalBox {
-            spacing: 5px;
-            Text {
-                text: "Password Length: \{root.length}";
-            }
-            Slider {
-                minimum: 8;
-                maximum: 64;
-                value: root.length;
-                changed(val) => { root.length = Math.round(val); }
-            }
-        }
-
-        VerticalBox {
-            spacing: 5px;
-            visible: root.selected-format == "Standard";
-            CheckBox {
-                text: "Include Uppercase Letters";
-                checked: root.use-uppercase;
-                toggled => { root.use-uppercase = !root.use-uppercase; }
-            }
-            CheckBox {
-                text: "Include Numbers";
-                checked: root.use-numbers;
-                toggled => { root.use-numbers = !root.use-numbers; }
-            }
-            CheckBox {
-                text: "Include Symbols";
-                checked: root.use-symbols;
-                toggled => { root.use-symbols = !root.use-symbols; }
-            }
-        }
-
-        Button {
-            text: "Generate";
-            primary: true;
-            clicked => { root.generate-password(); }
         }
     }
 }
