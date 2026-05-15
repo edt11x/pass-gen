@@ -43,3 +43,6 @@ cargo run --release
 - `ui/appwindow.slint`: UI definition and theme system.
 - `src/main.rs`: Application logic, password generation algorithms, and state management.
 - `install.sh`: Linux deployment script.
+
+## License
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
