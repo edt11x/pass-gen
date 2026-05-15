@@ -8,12 +8,12 @@ A GUI password generator for Linux using Rust and Slint.
 - **Randomness:** `rand` crate used for secure random string generation.
 - **Build System:** `slint-build` used in `build.rs` to compile `.slint` files to Rust code at build time.
 - **Clipboard:** `arboard` crate used for cross-platform clipboard access.
+- **Strength Indicator:** Custom heuristic logic in Rust based on length and character variety (upper, lower, digits, symbols).
 
 ## Known Issues
-- Basic password generation logic (now configurable length).
-- No "Clear" button yet.
+- Strength indicator is a basic heuristic.
 
 ## Next Steps
-- Add "Clear" button.
 - Improve UI styling and layout (e.g., custom colors/fonts).
-- Implement password strength indicator.
+- Implement more robust strength analysis using a library like `zxcvbn`.
+- Add tooltips or help text.

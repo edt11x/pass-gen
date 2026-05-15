@@ -5,7 +5,8 @@ A simple, modern password generation application for Linux, built with Rust and 
 ## Features
 - Generate secure passwords with configurable length (8-64 characters).
 - Toggle uppercase letters, numbers, and symbols.
-- **Copy to Clipboard** functionality.
+- **Password Strength Indicator** (Weak, Medium, Strong).
+- **Copy to Clipboard** and **Clear** functionality.
 - Clean and responsive Slint-based GUI.
 
 ## Prerequisites

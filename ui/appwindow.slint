@@ -6,13 +6,16 @@ export component AppWindow inherits Window {
     in-out property <bool> use-numbers: true;
     in-out property <bool> use-symbols: true;
     in-out property <int> length: 16;
+    in-out property <string> strength: "Weak";
+    in-out property <color> strength-color: red;
 
     callback generate-password();
     callback copy-to-clipboard();
+    callback clear-password();
 
     title: "Password Generator";
     min-width: 400px;
-    min-height: 400px;
+    min-height: 450px;
 
     VerticalBox {
         alignment: start;
@@ -37,6 +40,25 @@ export component AppWindow inherits Window {
                 text: "Copy";
                 width: 60px;
                 clicked => { root.copy-to-clipboard(); }
+            }
+            Button {
+                text: "Clear";
+                width: 60px;
+                clicked => { root.clear-password(); }
+            }
+        }
+
+        HorizontalBox {
+            alignment: center;
+            Text {
+                text: "Strength: ";
+                font-size: 14px;
+            }
+            Text {
+                text: root.strength;
+                color: root.strength-color;
+                font-weight: 700;
+                font-size: 14px;
             }
         }
 

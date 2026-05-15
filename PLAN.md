@@ -10,7 +10,8 @@
 ## Phase 2: Refinement (Done)
 - [x] Add password length slider.
 - [x] Implement Clipboard support.
-- [ ] Add "Clear" button.
+- [x] Add "Clear" button.
+- [x] Add password strength indicator.
 
 ## Phase 3: Packaging
 - [ ] Create a desktop entry file.
