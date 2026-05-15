@@ -114,6 +114,13 @@ fn main() -> Result<(), slint::PlatformError> {
                 "ASCII (Printable)" => {
                     (0..length).map(|_| rng.gen_range('!'..='~')).collect()
                 }
+                "TTY Noise" => {
+                    let charset = "!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~";
+                    (0..length).map(|_| {
+                        let idx = rng.gen_range(0..charset.len());
+                        charset.chars().nth(idx).unwrap()
+                    }).collect()
+                }
                 "Easy to Remember" => {
                     let words = ["alpha", "bravo", "charlie", "delta", "echo", "foxtrot", "golf", "hotel", "india", "juliett", "kilo", "lima", "mike", "november", "oscar", "papa", "quebec", "romeo", "sierra", "tango", "uniform", "victor", "whiskey", "xray", "yankee", "zulu"];
                     let mut p = String::new();

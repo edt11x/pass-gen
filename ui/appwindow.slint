@@ -141,15 +141,15 @@ export component AppWindow inherits Window {
                         font-size: 13px;
                         color: colors.text;
                     }
-                    ComboBox {
-                        model: [
-                            "Non-ambiguous (12)", "Non-ambiguous", "Alpha", "Alphanumeric", "Numeric",
-                            "Binary", "Hex", "Base 36", "Base 58", "Base 62", "ASCII (Printable)",
-                            "Easy to Remember", "Work Password", "Random Integer", "Standard"
-                        ];
-                        current-value: root.selected-format;
-                        selected(val) => { root.selected-format = val; }
-                    }
+                        ComboBox {
+                            model: [
+                                "Non-ambiguous (12)", "Non-ambiguous", "Alpha", "Alphanumeric", "Numeric",
+                                "Binary", "Hex", "Base 36", "Base 58", "Base 62", "ASCII (Printable)",
+                                "TTY Noise", "Easy to Remember", "Work Password", "Random Integer", "Standard"
+                            ];
+                            current-value: root.selected-format;
+                            selected(val) => { root.selected-format = val; }
+                        }
                 }
 
                 // Theme Selector

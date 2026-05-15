@@ -14,7 +14,7 @@
 
 ## Phase 3: Advanced Password Types (Done)
 - [x] Implement Non-ambiguous character sets (12 and arbitrary length).
-- [x] Implement Numeric, Binary, Hex, Base 36, Base 62, and ASCII Printable formats.
+- [x] Implement Numeric, Binary, Hex, Base 36, Base 62, ASCII Printable, and TTY Noise formats.
 - [x] Implement "Easy to Remember" leet-speak word phrases.
 - [x] Implement "Work Password" format (3 non-ambig + < + 3 non-ambig repeated).
 - [x] Implement Random Integer range generation.

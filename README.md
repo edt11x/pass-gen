@@ -10,6 +10,7 @@ A simple, modern, and highly configurable password generation application for Li
   - **Base 36 / Base 58 / Base 62**: For various encoding needs.
   - **Hex/Binary/Numeric**: For technical or PIN generation.
   - **ASCII (Printable)**: Uses all non-whitespace printable characters.
+  - **TTY Noise**: Focused on non-alphanumeric symbols and punctuation.
   - **Easy to Remember**: Generates "leet-speak" word phrases (e.g., `4lph4-br4v0`).
   - **Work Password**: A specific 14-character repeated format (e.g., `abc<123abc<123`).
   - **Random Integer**: Generates a random number in a user-defined range.
