@@ -14,8 +14,13 @@ A simple, modern password generation application for Linux, built with Rust and 
 - Slint dependencies (see [Slint documentation](https://slint.dev/))
 
 ## Usage
+You can run the application directly using Cargo:
 ```bash
 cargo run
+```
+Or use the provided run script:
+```bash
+./run.sh
 ```
 
 ## Development
