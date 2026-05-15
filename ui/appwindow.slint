@@ -69,7 +69,7 @@ export component AppWindow inherits Window {
                 text: "Format:";
             }
             ComboBox {
-                model: ["Standard", "Base36", "Hex", "Numeric"];
+                model: ["Standard", "Alpha", "Alphanumeric", "Base36", "Base58", "Base62", "Hex (Lower)", "Hex (Upper)", "Numeric"];
                 current-value: root.selected-format;
                 selected(val) => { root.selected-format = val; }
             }

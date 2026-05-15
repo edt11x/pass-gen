@@ -14,19 +14,21 @@ fn calculate_strength(password: &str) -> (&'static str, Color) {
     
     if length >= 12 { score += 1; }
     if length >= 16 { score += 1; }
+    if length >= 24 { score += 1; }
     
     let has_upper = password.chars().any(|c| c.is_uppercase());
     let has_lower = password.chars().any(|c| c.is_lowercase());
     let has_digit = password.chars().any(|c| c.is_numeric());
     let has_symbol = password.chars().any(|c| !c.is_alphanumeric());
     
-    if has_upper && has_lower { score += 1; }
+    if has_upper { score += 1; }
+    if has_lower { score += 1; }
     if has_digit { score += 1; }
     if has_symbol { score += 1; }
     
     match score {
-        0..=2 => ("Weak", Color::from_rgb_u8(255, 0, 0)),
-        3..=4 => ("Medium", Color::from_rgb_u8(255, 165, 0)),
+        0..=3 => ("Weak", Color::from_rgb_u8(255, 0, 0)),
+        4..=5 => ("Medium", Color::from_rgb_u8(255, 165, 0)),
         _ => ("Strong", Color::from_rgb_u8(0, 128, 0)),
     }
 }
@@ -42,8 +44,13 @@ fn main() -> Result<(), slint::PlatformError> {
             let format = ui.get_selected_format();
             
             let charset = match format.as_str() {
+                "Alpha" => "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ".to_string(),
+                "Alphanumeric" => "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".to_string(),
                 "Base36" => "abcdefghijklmnopqrstuvwxyz0123456789".to_string(),
-                "Hex" => "0123456789abcdef".to_string(),
+                "Base58" => "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz".to_string(),
+                "Base62" => "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".to_string(),
+                "Hex (Lower)" => "0123456789abcdef".to_string(),
+                "Hex (Upper)" => "0123456789ABCDEF".to_string(),
                 "Numeric" => "0123456789".to_string(),
                 _ => {
                     let mut s = "abcdefghijklmnopqrstuvwxyz".to_string();
