@@ -3,8 +3,9 @@
 A simple, modern password generation application for Linux, built with Rust and the Slint UI framework.
 
 ## Features
-- Generate 16-character secure passwords.
+- Generate secure passwords with configurable length (8-64 characters).
 - Toggle uppercase letters, numbers, and symbols.
+- **Copy to Clipboard** functionality.
 - Clean and responsive Slint-based GUI.
 
 ## Prerequisites

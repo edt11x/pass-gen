@@ -7,9 +7,9 @@
 - [x] Basic generation logic.
 - [x] Fixed Slint built-in import error (Text is built-in).
 
-## Phase 2: Refinement
-- [ ] Add password length slider.
-- [ ] Implement Clipboard support.
+## Phase 2: Refinement (Done)
+- [x] Add password length slider.
+- [x] Implement Clipboard support.
 - [ ] Add "Clear" button.
 
 ## Phase 3: Packaging

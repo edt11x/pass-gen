@@ -1,4 +1,4 @@
-import { Button, VerticalBox, LineEdit, CheckBox } from "std-widgets.slint";
+import { Button, VerticalBox, LineEdit, CheckBox, Slider, HorizontalBox } from "std-widgets.slint";
 
 export component AppWindow inherits Window {
     in-out property <string> password: "";
@@ -8,14 +8,15 @@ export component AppWindow inherits Window {
     in-out property <int> length: 16;
 
     callback generate-password();
+    callback copy-to-clipboard();
 
     title: "Password Generator";
     min-width: 400px;
-    min-height: 300px;
+    min-height: 400px;
 
     VerticalBox {
         alignment: start;
-        spacing: 10px;
+        spacing: 15px;
         padding: 20px;
 
         Text {
@@ -23,11 +24,33 @@ export component AppWindow inherits Window {
             font-size: 14px;
         }
 
-        LineEdit {
-            text: root.password;
-            read-only: true;
-            font-size: 18px;
-            horizontal-alignment: center;
+        HorizontalBox {
+            padding: 0;
+            spacing: 5px;
+            LineEdit {
+                text: root.password;
+                read-only: true;
+                font-size: 18px;
+                horizontal-alignment: center;
+            }
+            Button {
+                text: "Copy";
+                width: 60px;
+                clicked => { root.copy-to-clipboard(); }
+            }
+        }
+
+        VerticalBox {
+            spacing: 5px;
+            Text {
+                text: "Password Length: \{root.length}";
+            }
+            Slider {
+                minimum: 8;
+                maximum: 64;
+                value: root.length;
+                changed(val) => { root.length = Math.round(val); }
+            }
         }
 
         VerticalBox {

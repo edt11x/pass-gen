@@ -1,6 +1,7 @@
 slint::include_modules!();
 
 use rand::Rng;
+use arboard::Clipboard;
 
 fn main() -> Result<(), slint::PlatformError> {
     let ui = AppWindow::new()?;
@@ -9,7 +10,7 @@ fn main() -> Result<(), slint::PlatformError> {
         let ui_handle = ui.as_weak();
         move || {
             let ui = ui_handle.unwrap();
-            let length = 16;
+            let length = ui.get_length() as usize;
             let use_uppercase = ui.get_use_uppercase();
             let use_numbers = ui.get_use_numbers();
             let use_symbols = ui.get_use_symbols();
@@ -34,6 +35,17 @@ fn main() -> Result<(), slint::PlatformError> {
                 .collect();
 
             ui.set_password(password.into());
+        }
+    });
+
+    ui.on_copy_to_clipboard({
+        let ui_handle = ui.as_weak();
+        move || {
+            let ui = ui_handle.unwrap();
+            let password = ui.get_password();
+            if let Ok(mut clipboard) = Clipboard::new() {
+                let _ = clipboard.set_text(password.to_string());
+            }
         }
     });
 

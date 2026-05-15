@@ -6,6 +6,7 @@ edition = "2021"
 [dependencies]
 slint = "1.9.1"
 rand = "0.8.5"
+arboard = "3.4.1"
 
 [build-dependencies]
 slint-build = "1.9.1"
